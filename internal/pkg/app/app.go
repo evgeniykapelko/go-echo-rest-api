@@ -31,6 +31,8 @@ func New() (*App, error) {
 	a.echo.GET("/customers", a.e.GetAllCustomers)
 	a.echo.DELETE("/delete", a.e.DeleteCustomer)
 
+	a.echo.GET("/customer", a.e.GetCustomerByEmail)
+
 	return a, nil
 }
 
