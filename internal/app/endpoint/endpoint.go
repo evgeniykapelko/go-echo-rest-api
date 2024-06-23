@@ -3,11 +3,13 @@ package endpoint
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
+	"go-echo-rest-api/internal/app/model"
 	"net/http"
 )
 
 type Service interface {
 	DaysLeft() int64
+	SaveCustomer(firstName, lastName, email, country, password string) error
 }
 
 type Endpoint struct {
@@ -31,4 +33,18 @@ func (e *Endpoint) Status(ctx echo.Context) error {
 	}
 
 	return nil
+}
+
+func (e *Endpoint) CreateCustomer(c echo.Context) error {
+	customer := new(model.Customer)
+	if err := c.Bind(customer); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request"})
+	}
+
+	err := e.s.SaveCustomer(customer.FirstName, customer.LastName, customer.Email, customer.Country, customer.Password)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to save customer"})
+	}
+
+	return c.JSON(http.StatusCreated, customer)
 }
