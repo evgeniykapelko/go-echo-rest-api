@@ -10,6 +10,7 @@ import (
 type Service interface {
 	DaysLeft() int64
 	SaveCustomer(firstName, lastName, email, country, password string) error
+	GetAllCustomers() ([]*model.Customer, error)
 }
 
 type Endpoint struct {
@@ -47,4 +48,12 @@ func (e *Endpoint) CreateCustomer(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, customer)
+}
+
+func (e *Endpoint) GetAllCustomers(c echo.Context) error {
+	customers, err := e.s.GetAllCustomers()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to retrieve customers"})
+	}
+	return c.JSON(http.StatusOK, customers)
 }

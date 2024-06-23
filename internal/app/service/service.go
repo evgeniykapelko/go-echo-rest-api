@@ -3,6 +3,7 @@ package service
 import (
 	"database/sql"
 	_ "github.com/lib/pq"
+	"go-echo-rest-api/internal/app/model"
 	"log"
 	"time"
 )
@@ -31,6 +32,29 @@ func (s *Service) DaysLeft() int64 {
 	dur := time.Until(d)
 
 	return int64(dur.Hours() / 24)
+}
+
+func (s *Service) GetAllCustomers() ([]*model.Customer, error) {
+	query := `SELECT first_name, last_name, email, country FROM customers`
+	rows, err := s.DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var customers []*model.Customer
+	for rows.Next() {
+		var customer model.Customer
+		if err := rows.Scan(&customer.FirstName, &customer.LastName, &customer.Email, &customer.Country); err != nil {
+			return nil, err
+		}
+		customers = append(customers, &customer)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return customers, nil
 }
 
 func (s *Service) SaveCustomer(firstName, lastName, email, country, password string) error {
