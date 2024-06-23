@@ -27,8 +27,9 @@ func New() (*App, error) {
 	a.echo.Use(middleware.Verification)
 
 	a.echo.GET("/status", a.e.Status)
-	a.echo.POST("/customer", a.e.CreateCustomer)
+	a.echo.POST("/create", a.e.CreateCustomer)
 	a.echo.GET("/customers", a.e.GetAllCustomers)
+	a.echo.DELETE("/delete", a.e.DeleteCustomer)
 
 	return a, nil
 }

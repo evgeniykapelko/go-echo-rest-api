@@ -11,6 +11,7 @@ type Service interface {
 	DaysLeft() int64
 	SaveCustomer(firstName, lastName, email, country, password string) error
 	GetAllCustomers() ([]*model.Customer, error)
+	DeleteCustomerByEmail(email string) error
 }
 
 type Endpoint struct {
@@ -56,4 +57,26 @@ func (e *Endpoint) GetAllCustomers(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to retrieve customers"})
 	}
 	return c.JSON(http.StatusOK, customers)
+}
+
+func (e *Endpoint) DeleteCustomer(c echo.Context) error {
+	type RequestBody struct {
+		Email string `json:"email"`
+	}
+
+	reqBody := new(RequestBody)
+	if err := c.Bind(reqBody); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request"})
+	}
+
+	if reqBody.Email == "" {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Email is required"})
+	}
+
+	err := e.s.DeleteCustomerByEmail(reqBody.Email)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to delete customer"})
+	}
+
+	return c.JSON(http.StatusOK, map[string]string{"message": "Customer deleted successfully"})
 }

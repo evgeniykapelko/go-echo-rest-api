@@ -62,3 +62,9 @@ func (s *Service) SaveCustomer(firstName, lastName, email, country, password str
 	_, err := s.DB.Exec(query, firstName, lastName, email, country, password)
 	return err
 }
+
+func (s *Service) DeleteCustomerByEmail(email string) error {
+	query := `DELETE FROM customers WHERE email = $1`
+	_, err := s.DB.Exec(query, email)
+	return err
+}
