@@ -102,3 +102,22 @@ func (e *Endpoint) GetCustomerByEmail(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, customer)
 }
+
+//func (e *Endpoint) UpdateCustomerById(c echo.Context) error {
+//	type RequestBody struct {
+//		Id string `json:"id"`
+//	}
+//
+//	reqBody := new(RequestBody)
+//	if err := c.Bind(reqBody); err != nil {
+//		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request"})
+//	}
+//
+//	if reqBody.Id == "" {
+//		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Id is required"})
+//	}
+//
+//	customer, err := e.s.GetCustomerByEmail(reqBody.Id)
+//
+//	return err
+//}

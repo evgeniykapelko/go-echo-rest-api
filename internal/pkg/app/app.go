@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"go-echo-rest-api/internal/app/endpoint"
 	"go-echo-rest-api/internal/app/middleware"
+	"go-echo-rest-api/internal/app/routes"
 	"go-echo-rest-api/internal/app/service"
 	"log"
 )
@@ -24,14 +25,9 @@ func New() (*App, error) {
 
 	a.echo = echo.New()
 
-	a.echo.Use(middleware.Verification)
+	middleware.InitMiddlewares(a.echo)
 
-	a.echo.GET("/status", a.e.Status)
-	a.echo.POST("/create", a.e.CreateCustomer)
-	a.echo.GET("/customers", a.e.GetAllCustomers)
-	a.echo.DELETE("/delete", a.e.DeleteCustomer)
-
-	a.echo.GET("/customer", a.e.GetCustomerByEmail)
+	routes.InitRoutes(a.echo, a.e)
 
 	return a, nil
 }

@@ -91,3 +91,26 @@ func (s *Service) GetCustomerByEmail(email string) ([]*model.Customer, error) {
 
 	return customers, nil
 }
+
+//func (s *Service) GetCustomerById(id string) ([]*model.Customer, error) {
+//	query := `SELECT first_name, last_name, email, country FROM customers WHERE id = $1`
+//	rows, err := s.DB.Query(query, email)
+//	if err != nil {
+//		return nil, err
+//	}
+//	defer rows.Close()
+//
+//	var customers []*model.Customer
+//	for rows.Next() {
+//		var customer model.Customer
+//		if err := rows.Scan(&customer.FirstName, &customer.LastName, &customer.Email, &customer.Country); err != nil {
+//			return nil, err
+//		}
+//		customers = append(customers, &customer)
+//	}
+//	if err := rows.Err(); err != nil {
+//		return nil, err
+//	}
+//
+//	return customers, nil
+//}
